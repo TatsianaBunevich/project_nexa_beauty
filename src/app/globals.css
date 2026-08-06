@@ -57,8 +57,13 @@
   }
 }
 
-@layer components {
-  .premium-card {
-    @apply bg-card text-card-foreground rounded-lg border shadow-sm transition-all duration-200 hover:shadow-md;
+@layer utilities {
+  .animate-scan-line {
+    animation: scan-line 2s linear infinite;
   }
+}
+
+@keyframes scan-line {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(300px); } /* This is a rough estimate, needs fine tuning */
 }

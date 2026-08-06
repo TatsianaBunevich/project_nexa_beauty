@@ -1,0 +1,57 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ProductStatus {
+  Confirmed
+  PendingReview
+}
+
+model User {
+  id            String        @id @default(uuid())
+  email         String        @unique
+  name          String?
+  image         String?
+  products      UserProduct[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+model Product {
+  id        String        @id @default(uuid())
+  brand     String
+  name      String
+  category  String
+  shade     String?
+  finish    String?
+  imageUrl  String?
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  userProducts UserProduct[]
+
+  @@unique([brand, name])
+  @@index([brand, name])
+}
+
+model UserProduct {
+  id              String        @id @default(uuid())
+  userId          String
+  productId       String
+  imagePath       String
+  estimatedPrice  Decimal?
+  expirationDate  DateTime?
+  confidenceScore Float?
+  status          ProductStatus @default(PendingReview)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product  Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}

@@ -1,17 +1,14 @@
-"use client";
-import React, { useState } from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { Menu, X } from 'lucide-react';
-import { cn } from '@/lib/utils';
+'use client'
 
-export default function DashboardLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const pathname = usePathname();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+import React, { useState } from 'react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { Menu } from 'lucide-react'
+import { cn } from '@/lib/utils'
+
+export function DashboardShell({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname()
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
   const navItems = [
     { name: 'Dashboard', href: '/dashboard' },
@@ -21,7 +18,7 @@ export default function DashboardLayout({
     { name: 'Looks', href: '/looks' },
     { name: 'Analytics', href: '/analytics' },
     { name: 'Settings', href: '/settings' },
-  ];
+  ]
 
   return (
     <div className="flex h-screen overflow-hidden bg-background">
@@ -89,5 +86,5 @@ export default function DashboardLayout({
         </div>
       </main>
     </div>
-  );
+  )
 }

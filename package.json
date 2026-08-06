@@ -11,6 +11,7 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
+    "@ai-sdk/openai": "^4.0.33",
     "@base-ui/react": "^1.7.0",
     "@hookform/resolvers": "^3.3.0",
     "@prisma/client": "^5.0.0",
