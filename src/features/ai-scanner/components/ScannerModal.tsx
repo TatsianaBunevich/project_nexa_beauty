@@ -44,7 +44,7 @@ export function ScannerModal({ isOpen, onClose, userId }: ScannerModalProps) {
               <ScannerPreview imageUrl={scanner.image?.url || ''} />
               <div className="text-center">
                 <p className="font-medium">Analyzing your beauty product...</p>
-                <p className="text-sm text-muted-foreground">Using GPT-4o Vision to extract details</p>
+                <p className="text-sm text-muted-foreground">Using openrouter Vision to extract details</p>
               </div>
             </div>
           )}

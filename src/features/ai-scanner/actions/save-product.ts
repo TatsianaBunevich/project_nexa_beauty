@@ -1,5 +1,7 @@
 'use server'
 
+import 'dotenv/config';
+import { PrismaClient } from '@prisma/client';
 import { prisma } from '@/lib/prisma'
 import { ScanResult } from '../types/scanner'
 import { revalidatePath } from 'next/cache'

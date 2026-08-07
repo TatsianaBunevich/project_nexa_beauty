@@ -1,13 +1,23 @@
 'use server'
 
 import { generateObject } from 'ai'
-import { openai } from '@ai-sdk/openai'
+import { createOpenAI } from '@ai-sdk/openai';
 import { scanSchema } from '../types/scanner'
+
+const openrouter = createOpenAI({
+  baseURL: 'https://openrouter.ai/api/v1',
+  apiKey: process.env.OPENROUTER_API_KEY,
+});
 
 export async function processScan(imageUrl: string) {
   try {
+    // Fetch the image and convert to base64 to avoid URL serialization issues
+    const imageResponse = await fetch(imageUrl)
+    if (!imageResponse.ok) throw new Error(`Failed to fetch image: ${imageResponse.statusText}`)
+
     const { object } = await generateObject({
-      model: openai('gpt-4o'),
+      model: openrouter('openrouter/free'),
+      mode: 'json',
       schema: scanSchema,
       system: `You are a professional cosmetic expert and product analyst. Your task is to analyze images of makeup and skincare products and extract precise metadata.
 
@@ -25,12 +35,16 @@ export async function processScan(imageUrl: string) {
         {
           role: 'user',
           content: [
-            { type: 'text', text: 'Please analyze this makeup product image and extract the requested metadata.' },
-            { type: 'image', image: imageUrl },
-          ],
+          { type: 'text', text: 'Analyze this makeup product.' },
+          { 
+            type: 'file', 
+            data: new URL(imageUrl), 
+            mediaType: 'image/jpeg'  
+          },
+        ],
         },
       ],
-    })
+    });
 
     return { success: true, data: object }
   } catch (error) {

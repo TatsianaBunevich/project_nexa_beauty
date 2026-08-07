@@ -35,7 +35,7 @@ export default function ScannerPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-12">
           <div className="p-6 border rounded-2xl text-left space-y-2">
             <h3 className="font-bold">Fast Extraction</h3>
-            <p className="text-sm text-muted-foreground">Powered by GPT-4o for high-precision metadata</p>
+            <p className="text-sm text-muted-foreground">Powered by openrouter for high-precision metadata</p>
           </div>
           <div className="p-6 border rounded-2xl text-left space-y-2">
             <h3 className="font-bold">Verification</h3>
