@@ -1,11 +1,12 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 import { X, Camera, CheckCircle2 } from 'lucide-react'
 import { useAiScanner } from '../hooks/use-ai-scanner'
 import { ScannerUpload } from './ScannerUpload'
 import { ScannerPreview } from './ScannerPreview'
 import { ConfirmationForm } from './ConfirmationForm'
+import Link from 'next/link';
 import { cn } from '@/lib/utils'
 
 interface ScannerModalProps {
@@ -16,6 +17,7 @@ interface ScannerModalProps {
 
 export function ScannerModal({ isOpen, onClose, userId }: ScannerModalProps) {
   const scanner = useAiScanner()
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   if (!isOpen) return null
 
@@ -100,7 +102,12 @@ export function ScannerModal({ isOpen, onClose, userId }: ScannerModalProps) {
                 onClick={onClose}
                 className="px-6 py-2 bg-primary text-primary-foreground rounded-full"
               >
-                View Collection
+                <Link
+                  href="/collection"
+                  onClick={() => setIsSidebarOpen(false)}
+                >
+                  View Collection
+                </Link>
               </button>
             </div>
           )}
