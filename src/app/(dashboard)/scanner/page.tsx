@@ -6,7 +6,7 @@ import { Camera, Plus } from 'lucide-react'
 
 export default function ScannerPage() {
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const mockUserId = 'user_123' // Will be replaced by actual auth logic
+  const mockUserId = '00000000-0000-0000-0000-000000000000' // Will be replaced by actual auth logic
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[calc(100vh-8rem)] text-center p-6">
