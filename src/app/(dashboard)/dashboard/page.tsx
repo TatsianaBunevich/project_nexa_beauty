@@ -1,48 +1,78 @@
-import { supabase } from '@/lib/supabase'
+import { getDashboardStats } from '@/app/(dashboard)/dashboard/actions'
 import Image from 'next/image'
 import { Card } from '@/components/ui/card'
+import { AIInsights } from '@/components/dashboard/AIInsights'
+import { Package, AlertTriangle, Layers, Clock } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 export default async function DashboardPage() {
-  // Fetch the 3 most recently added products from the 'products' table
-  const { data: products, error } = await supabase
-    .from('products')
-    .select('*')
-    .order('created_at', { ascending: false })
-    .limit(3)
+  const stats = await getDashboardStats()
 
-  const bucketUrl = 'https://hdljtcyuzexuehioebru.supabase.co/storage/v1/object/public/cosmetic-scans'
+  const widgetData = [
+    {
+      label: 'Total Products',
+      value: stats.totalProducts,
+      icon: Package,
+      color: 'text-blue-500',
+    },
+    {
+      label: 'Most Used',
+      value: stats.mostUsedCategory,
+      icon: Layers,
+      color: 'text-purple-500',
+    },
+    {
+      label: 'Unused Items',
+      value: stats.unusedProducts,
+      icon: Clock,
+      color: 'text-amber-500',
+    },
+    {
+      label: 'Duplicates',
+      value: stats.duplicates,
+      icon: AlertTriangle,
+      color: 'text-red-500',
+    },
+  ]
 
   return (
     <div className="space-y-8">
       <h1 className="text-3xl font-bold mb-6">Dashboard</h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="p-6 border rounded-xl bg-card">Collection Stats</div>
-        <div className="p-6 border rounded-xl bg-card">AI Suggestions</div>
-        <div className="p-6 border rounded-xl bg-card">Account Settings</div>
+      {/* Analytics Widgets */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+        {widgetData.map((widget, idx) => (
+          <Card key={idx} className="p-6 flex flex-col gap-2">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium text-muted-foreground">{widget.label}</span>
+              <widget.icon className={cn("w-4 h-4", widget.color)} />
+            </div>
+            <div className="text-2xl font-bold">{widget.value}</div>
+          </Card>
+        ))}
       </div>
 
-      <section className="space-y-4">
-        <h2 className="text-xl font-semibold">Recent Scans</h2>
-        {!products || products.length === 0 ? (
-          <div className="p-12 border-2 border-dashed rounded-xl text-center text-muted-foreground">
-            No recent products found. Start scanning products!
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* AI Insights - Taking 2 columns */}
+        <div className="lg:col-span-2">
+          <AIInsights />
+        </div>
+
+        {/* Quick Stats/Warnings - Taking 1 column */}
+        <Card className="p-6 space-y-4">
+          <h3 className="font-semibold">Health Check</h3>
+          <div className="space-y-3">
+            <div className="flex justify-between items-center p-2 bg-muted rounded-lg text-sm">
+              <span className="text-muted-foreground">Expiring Soon</span>
+              <span className="font-bold text-red-500">{stats.expiringSoonCount}</span>
+            </div>
+            <div className="flex justify-between items-center p-2 bg-muted rounded-lg text-sm">
+              <span className="text-muted-foreground">Collection Score</span>
+              <span className="font-bold text-green-500">Good</span>
+            </div>
           </div>
-        ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            {products.map((product: any) => (
-              <Card key={product.id} className="overflow-hidden group relative aspect-square bg-muted">
-                <Image
-                  src={product.image_url ? `${bucketUrl}/${product.image_url}` : '/placeholder-image.jpg'}
-                  alt={product.product_name || 'Recent scan'}
-                  fill
-                  className="object-cover group-hover:scale-110 transition-transform duration-300"
-                />
-              </Card>
-            ))}
-          </div>
-        )}
-      </section>
+        </Card>
+      </div>
     </div>
   )
 }

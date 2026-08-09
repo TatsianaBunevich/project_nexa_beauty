@@ -11,11 +11,13 @@ interface ScannerPreviewProps {
 export function ScannerPreview({ imageUrl }: ScannerPreviewProps) {
   return (
     <div className="relative w-full aspect-square max-w-md mx-auto rounded-2xl overflow-hidden shadow-2xl">
+      {imageUrl && imageUrl.trim() !== "" &&
       <img
         src={imageUrl}
         alt="Scanning product"
         className="w-full h-full object-cover"
       />
+      }
 
       {/* Scanning Overlay */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
