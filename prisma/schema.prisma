@@ -508,12 +508,25 @@ model Product {
   image_url            String?
   confidence_score     Float?
   estimated_expiration DateTime?         @db.Date
+  price                Decimal?          @db.Decimal(10, 2)
   embedding            Unsupported("vector")?
   user_collection      user_collection[]
 
   @@unique([brand, product_name])
   @@index([brand, product_name])
   @@map("products")
+  @@schema("public")
+}
+
+model UserProfile {
+  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId          String   @unique @db.Uuid
+  skinTone        String?
+  eyeColor        String?
+  skinType        String?
+  preferredStyle String?
+  updatedAt       DateTime @updatedAt @db.Timestamptz(6)
+
   @@schema("public")
 }
 
