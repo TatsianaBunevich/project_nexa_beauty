@@ -4,9 +4,17 @@ import { generateObject } from 'ai'
 import { google } from '@ai-sdk/google'
 import { prisma } from '@/lib/prisma'
 import { z } from 'zod'
+import { createOpenAI } from '@ai-sdk/openai'
+
+const openrouter = createOpenAI({
+  baseURL: 'https://openrouter.ai/api/v1',
+  apiKey: process.env.OPENROUTER_API_KEY,
+})
 
 const insightsSchema = z.object({
-  insights: z.array(z.string()).describe("A list of natural language beauty collection insights"),
+  insights: z
+    .array(z.string())
+    .describe('A list of natural language beauty collection insights'),
 })
 
 export async function generateAIInsights() {
@@ -20,19 +28,25 @@ export async function generateAIInsights() {
       include: { product: true },
     })
 
-    const products = collection.map(item => item.product).filter(Boolean)
+    const products = collection.map((item) => item.product).filter(Boolean)
 
     if (products.length === 0) {
-      return { success: false, error: 'Your collection is empty. Scan some products first!' }
+      return {
+        success: false,
+        error: 'Your collection is empty. Scan some products first!',
+      }
     }
 
     // Create a summary for the AI
-    const summary = products.map(p =>
-      `${p.brand} ${p.product_name} (${p.category}, ${p.shade}, ${p.finish})`
-    ).join('\n')
+    const summary = products
+      .map(
+        (p) =>
+          `${p.brand} ${p.product_name} (${p.category}, ${p.shade}, ${p.finish})`
+      )
+      .join('\n')
 
     const { object } = await generateObject({
-      model: google('gemini-1.5-flash'),
+      model: openrouter('openrouter/free'),
       schema: insightsSchema,
       system: `You are a luxury beauty consultant. Analyze the user's makeup collection and provide 3-5 high-value, natural language insights.
 
