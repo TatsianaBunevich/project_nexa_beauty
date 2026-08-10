@@ -1,5 +1,13 @@
 /** @type {import('next').NextConfig} */
+
+const path = require('path')
+
 const nextConfig = {
+  webpack: (config) => {
+    config.resolve.alias['@'] = path.resolve(__dirname)
+    // Use path.resolve(__dirname, 'src') if your files are inside a src folder
+    return config
+  },
   images: {
     remotePatterns: [
       {
@@ -10,6 +18,6 @@ const nextConfig = {
       },
     ],
   },
-};
+}
 
-module.exports = nextConfig;
+module.exports = nextConfig

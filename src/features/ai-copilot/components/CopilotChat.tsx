@@ -1,18 +1,70 @@
 'use client'
 
-import React from 'react'
-import { useChat } from '@ai-sdk/react'
+import React, { useState, useRef, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Card } from '@/components/ui/card'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Sparkles, Send, User, Bot } from 'lucide-react'
+import { CopilotResponse } from '@/types/copilot'
 
 export function CopilotChat() {
-  const { messages, input, handleInputChange, handleSubmit, isLoading } =
-    useChat({
-      api: '/api/copilot/chat',
-    })
+  const [messages, setMessages] = useState<
+    { role: 'user' | 'assistant'; content: string; data?: CopilotResponse }[]
+  >([])
+  const [input, setInput] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+  const scrollRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight
+    }
+  }, [messages])
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    if (!input.trim() || isLoading) return
+
+    const userMessage = input
+    setInput('')
+    setMessages((prev) => [...prev, { role: 'user', content: userMessage }])
+    setIsLoading(true)
+
+    try {
+      const response = await fetch('/api/copilot/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: userMessage,
+          userId: 'user_123', // Mock userId for now, should come from auth
+        }),
+      })
+
+      if (!response.ok) throw new Error('Failed to fetch')
+
+      const data: CopilotResponse = await response.json()
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: 'assistant',
+          content: data.message,
+          data: data,
+        },
+      ])
+    } catch (error) {
+      console.error('Chat error:', error)
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: 'assistant',
+          content: 'Sorry, I encountered an error. Please try again.',
+        },
+      ])
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   return (
     <div className="mx-auto flex h-[600px] w-full max-w-2xl flex-col overflow-hidden rounded-xl border bg-background">
@@ -21,20 +73,22 @@ export function CopilotChat() {
         <h2 className="font-semibold">Nexa Beauty Copilot</h2>
       </div>
 
-      <ScrollArea className="flex-1 p-4">
+      <ScrollArea className="flex-1 p-4" ref={scrollRef}>
         <div className="space-y-4">
           {messages.length === 0 && (
             <div className="py-10 text-center text-muted-foreground">
-              <p>Hello! I'm your AI Beauty Expert. How can I help you today?</p>
+              <p>
+                Hello! I&apos;m your AI Beauty Expert. How can I help you today?
+              </p>
               <p className="mt-2 text-sm">
-                Try: "I have warm olive skin and a green dress for a wedding.
-                Suggest a look!"
+                Try: &quot;I have warm olive skin and a green dress for a
+                wedding. Suggest a look!&quot;
               </p>
             </div>
           )}
-          {messages.map((m) => (
+          {messages.map((m, index) => (
             <div
-              key={m.id}
+              key={index}
               className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}
             >
               <div
@@ -54,30 +108,58 @@ export function CopilotChat() {
                 >
                   <p className="text-sm leading-relaxed">{m.content}</p>
 
-                  {/* Tool call rendering would go here */}
-                  {m.toolInvocations?.map((toolInvocation) => {
-                    const { toolCallId, toolName, args } = toolInvocation
-                    if (toolInvocation.state === 'result') {
-                      return (
-                        <div
-                          key={toolCallId}
-                          className="mt-2 rounded border bg-background/50 p-2 text-xs"
+                  {/* Structured Data Rendering */}
+                  {m.data?.look && (
+                    <div className="mt-3 rounded border bg-background/50 p-3 text-xs">
+                      <div className="mb-1 font-bold text-primary">
+                        ✨ Recommended Look: {m.data.look.name}
+                      </div>
+                      <div className="mb-2 italic text-muted-foreground">
+                        {m.data.look.occasion}
+                      </div>
+                      <div className="space-y-1">
+                        {m.data.look.steps.map((step, i) => (
+                          <div key={i} className="flex gap-2">
+                            <span className="font-semibold">
+                              {step.category}:
+                            </span>
+                            <span>{step.instruction}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {m.data?.products.length > 0 && (
+                    <div className="mt-3 rounded border bg-background/50 p-3 text-xs">
+                      <div className="mb-1 font-bold text-primary">
+                        🛍️ Suggested Products
+                      </div>
+                      <div className="grid grid-cols-1 gap-2">
+                        {m.data.products.map((p, i) => (
+                          <div key={i} className="flex justify-between">
+                            <span>
+                              {p.brand} {p.product_name}
+                            </span>
+                            <span className="font-mono">${p.price}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {m.data?.toolsUsed.length > 0 && (
+                    <div className="mt-2 flex flex-wrap gap-1">
+                      {m.data.toolsUsed.map((tool, i) => (
+                        <span
+                          key={i}
+                          className="rounded-full bg-muted-foreground/10 px-2 py-0.5 text-[10px] text-muted-foreground"
                         >
-                          <strong>{toolName}</strong>:{' '}
-                          {JSON.stringify(toolInvocation.result)}
-                        </div>
-                      )
-                    } else {
-                      return (
-                        <div
-                          key={toolCallId}
-                          className="mt-2 animate-pulse rounded border bg-background/50 p-2 text-xs"
-                        >
-                          Using {toolName}...
-                        </div>
-                      )
-                    }
-                  })}
+                          {tool.replace('_', ' ')}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -88,7 +170,7 @@ export function CopilotChat() {
       <form onSubmit={handleSubmit} className="flex gap-2 border-t p-4">
         <Input
           value={input}
-          onChange={handleInputChange}
+          onChange={(e) => setInput(e.target.value)}
           placeholder="Ask your beauty expert..."
           disabled={isLoading}
           className="flex-1"
