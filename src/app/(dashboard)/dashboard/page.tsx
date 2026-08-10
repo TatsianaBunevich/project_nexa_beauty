@@ -37,36 +37,40 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-8">
-      <h1 className="text-3xl font-bold mb-6">Dashboard</h1>
+      <h1 className="mb-6 text-3xl font-bold">Beauty Analytics</h1>
 
       {/* Analytics Widgets */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
         {widgetData.map((widget, idx) => (
-          <Card key={idx} className="p-6 flex flex-col gap-2">
+          <Card key={idx} className="flex flex-col gap-2 p-6">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-muted-foreground">{widget.label}</span>
-              <widget.icon className={cn("w-4 h-4", widget.color)} />
+              <span className="text-sm font-medium text-muted-foreground">
+                {widget.label}
+              </span>
+              <widget.icon className={cn('h-4 w-4', widget.color)} />
             </div>
             <div className="text-2xl font-bold">{widget.value}</div>
           </Card>
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
         {/* AI Insights - Taking 2 columns */}
         <div className="lg:col-span-2">
           <AIInsights />
         </div>
 
         {/* Quick Stats/Warnings - Taking 1 column */}
-        <Card className="p-6 space-y-4">
+        <Card className="space-y-4 p-6">
           <h3 className="font-semibold">Health Check</h3>
           <div className="space-y-3">
-            <div className="flex justify-between items-center p-2 bg-muted rounded-lg text-sm">
+            <div className="flex items-center justify-between rounded-lg bg-muted p-2 text-sm">
               <span className="text-muted-foreground">Expiring Soon</span>
-              <span className="font-bold text-red-500">{stats.expiringSoonCount}</span>
+              <span className="font-bold text-red-500">
+                {stats.expiringSoonCount}
+              </span>
             </div>
-            <div className="flex justify-between items-center p-2 bg-muted rounded-lg text-sm">
+            <div className="flex items-center justify-between rounded-lg bg-muted p-2 text-sm">
               <span className="text-muted-foreground">Collection Score</span>
               <span className="font-bold text-green-500">Good</span>
             </div>
