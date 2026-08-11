@@ -9,8 +9,6 @@ export const openrouter = new OpenAI({
   },
 })
 
-// export const OPENROUTER_MODEL =
-//   process.env.OPENROUTER_MODEL || 'anthropic/claude-3.5-sonnet'
 export const OPENROUTER_MODEL = 'openrouter/free'
 
 export async function generateOpenRouterResponse(params: {
