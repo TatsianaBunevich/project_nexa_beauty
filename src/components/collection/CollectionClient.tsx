@@ -8,19 +8,10 @@ import { Badge } from '@/components/ui/badge'
 import { Card } from '@/components/ui/card'
 import Image from 'next/image'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { LayoutGrid, List } from 'lucide-react'
+import { LayoutGrid, List, Trash2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-
-interface Product {
-  id: string
-  brand: string
-  product_name: string
-  category: string | null
-  shade: string | null
-  finish: string | null
-  image_url: string | null
-  estimated_expiration: string | null
-}
+import { deleteCollectionItem } from '@/features/collection/actions/delete-item'
+import { useTransition } from 'react'
 
 interface CollectionClientProps {
   initialProducts: any[]
@@ -47,11 +38,25 @@ function getStorageImageUrl(pathOrUrl: string | null): string | null {
 }
 
 export function CollectionClient({ initialProducts }: CollectionClientProps) {
+  const [isPending, startTransition] = useTransition()
   const [viewMode, setViewMode] = useState<'gallery' | 'table'>('gallery')
   const [searchQuery, setSearchQuery] = useState('')
   const [brandFilter, setBrandFilter] = useState('all')
   const [categoryFilter, setCategoryFilter] = useState('all')
   const [finishFilter, setFinishFilter] = useState('all')
+
+  const handleDelete = async (itemId: string) => {
+    if (!confirm('Are you sure you want to remove this item from your collection?')) {
+      return
+    }
+
+    startTransition(async () => {
+      const result = await deleteCollectionItem(itemId)
+      if (!result.success) {
+        alert(result.error || 'An error occurred while deleting the item.')
+      }
+    })
+  }
 
   // Extract unique values for filters
   const brands = useMemo(() =>
@@ -68,8 +73,8 @@ export function CollectionClient({ initialProducts }: CollectionClientProps) {
 
   const filteredProducts = useMemo(() => {
     return initialProducts
-      .map(item => item.product)
-      .filter(product => {
+      .filter(item => {
+        const product = item.product
         if (!product) return false
 
         const matchesSearch =
@@ -151,35 +156,43 @@ export function CollectionClient({ initialProducts }: CollectionClientProps) {
       {/* Content Area */}
       {viewMode === 'gallery' ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {filteredProducts.map(product => (
-            <Card key={product.id} className="overflow-hidden group hover:shadow-lg transition-shadow duration-300">
+          {filteredProducts.map(item => (
+            <Card key={item.id} className="overflow-hidden group hover:shadow-lg transition-shadow duration-300">
               <div className="aspect-square relative bg-muted">
-                {product.image_url && getStorageImageUrl(product.image_url) && (
+                {item.product?.image_url && getStorageImageUrl(item.product.image_url) && (
                   <Image
-                    src={getStorageImageUrl(product.image_url)!}
-                    alt={product.product_name}
+                    src={getStorageImageUrl(item.product.image_url)!}
+                    alt={item.product.product_name}
                     fill
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 33vw, 25vw"
                     className="object-cover group-hover:scale-105 transition-transform duration-300"
                   />
                 )}
-                <div className="absolute top-2 right-2">
-                  {getExpirationBadge(product.estimated_expiration)}
+                <div className="absolute top-2 right-2 flex gap-2">
+                  {getExpirationBadge(item.product?.estimated_expiration)}
+                  <button
+                    onClick={() => handleDelete(item.id)}
+                    disabled={isPending}
+                    className="p-1.5 bg-background/80 backdrop-blur-sm text-destructive hover:bg-destructive hover:text-background rounded-full transition-all opacity-0 group-hover:opacity-100 shadow-sm"
+                    title="Remove from collection"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
                 </div>
               </div>
               <div className="p-4 space-y-1">
                 <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                  {product.brand}
+                  {item.product?.brand}
                 </p>
                 <h3 className="font-semibold text-sm line-clamp-1">
-                  {product.product_name}
+                  {item.product?.product_name}
                 </h3>
                 <div className="flex justify-between items-center pt-2">
                   <span className="text-xs bg-secondary text-secondary-foreground px-2 py-0.5 rounded-full">
-                    {product.category}
+                    {item.product?.category}
                   </span>
                   <span className="text-xs text-muted-foreground">
-                    {product.shade}
+                    {item.product?.shade}
                   </span>
                 </div>
               </div>
@@ -200,15 +213,25 @@ export function CollectionClient({ initialProducts }: CollectionClientProps) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredProducts.map(product => (
-                <TableRow key={product.id}>
-                  <TableCell className="font-medium">{product.product_name}</TableCell>
-                  <TableCell>{product.brand}</TableCell>
-                  <TableCell>{product.category}</TableCell>
-                  <TableCell>{product.shade}</TableCell>
-                  <TableCell>{product.finish}</TableCell>
+              {filteredProducts.map(item => (
+                <TableRow key={item.id}>
+                  <TableCell className="font-medium">{item.product?.product_name}</TableCell>
+                  <TableCell>{item.product?.brand}</TableCell>
+                  <TableCell>{item.product?.category}</TableCell>
+                  <TableCell>{item.product?.shade}</TableCell>
+                  <TableCell>{item.product?.finish}</TableCell>
                   <TableCell>
-                    {getExpirationBadge(product.estimated_expiration)}
+                    <div className="flex items-center gap-2">
+                      {getExpirationBadge(item.product?.estimated_expiration)}
+                      <button
+                        onClick={() => handleDelete(item.id)}
+                        disabled={isPending}
+                        className="p-1.5 text-destructive hover:bg-destructive/10 rounded-md transition-colors"
+                        title="Remove from collection"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}
