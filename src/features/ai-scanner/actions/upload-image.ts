@@ -1,9 +1,10 @@
 'use server'
 
-import { supabase } from '@/lib/supabase'
+import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 
 export async function uploadImage(formData: FormData) {
+  const supabase = await createClient()
   const file = formData.get('file') as File
   if (!file) throw new Error('No file uploaded')
 

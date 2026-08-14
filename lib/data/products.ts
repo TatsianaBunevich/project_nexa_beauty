@@ -1,5 +1,5 @@
-import { prisma } from '@/src/lib/prisma';
-import { supabase } from '@/src/lib/supabase';
+import { prisma } from '@/lib/prisma';
+import { supabase } from '@/lib/supabase';
 import { Product, ProductSearchQuery } from '@/types/product';
 
 export interface ProductRepository {

@@ -7,7 +7,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Sparkles, Send, User, Bot } from 'lucide-react'
 import { CopilotResponse } from '@/types/copilot'
 
-export function CopilotChat() {
+export function CopilotChat({ userId }: { userId: string }) {
   const [messages, setMessages] = useState<
     { role: 'user' | 'assistant'; content: string; data?: CopilotResponse }[]
   >([])
@@ -36,7 +36,7 @@ export function CopilotChat() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           message: userMessage,
-          userId: 'user_123', // Mock userId for now, should come from auth
+          userId,
         }),
       })
 

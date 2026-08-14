@@ -4,8 +4,13 @@ import { Card } from '@/components/ui/card'
 import { AIInsights } from '@/components/dashboard/AIInsights'
 import { Package, AlertTriangle, Layers, Clock } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { auth } from '@/lib/auth'
+import { redirect } from 'next/navigation'
 
 export default async function DashboardPage() {
+  const { user, error } = await auth()
+  if (error || !user) redirect('/login')
+
   const stats = await getDashboardStats()
 
   const widgetData = [

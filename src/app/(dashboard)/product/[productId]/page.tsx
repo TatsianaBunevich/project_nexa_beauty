@@ -1,12 +1,24 @@
-export default function ProductDetailPage({ params }: { params: { productId: string } }) {
+import { auth } from '@/lib/auth'
+import { redirect } from 'next/navigation'
+
+export default async function ProductDetailPage({
+  params,
+}: {
+  params: { productId: string }
+}) {
+  const { user, error } = await auth()
+  if (error || !user) redirect('/login')
+
   return (
     <div>
-      <h1 className="text-3xl font-bold mb-6">Product Details: {params.productId}</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div className="aspect-square bg-muted rounded-xl" />
+      <h1 className="mb-6 text-3xl font-bold">
+        Product Details: {params.productId}
+      </h1>
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+        <div className="aspect-square rounded-xl bg-muted" />
         <div className="space-y-4">
-          <div className="p-6 border rounded-xl">Product Specifications</div>
-          <div className="p-6 border rounded-xl">AI Dupe Recommendations</div>
+          <div className="rounded-xl border p-6">Product Specifications</div>
+          <div className="rounded-xl border p-6">AI Dupe Recommendations</div>
         </div>
       </div>
     </div>

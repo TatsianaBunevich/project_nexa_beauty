@@ -1,3 +1,5 @@
+'use server';
+
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/lib/auth';
 import { z } from 'zod';
@@ -30,10 +32,11 @@ export async function updateBeautyProfile(data: any) {
 export async function getBeautyProfile() {
   const session = await auth();
   if (!session?.user) {
-    throw new Error('Unauthorized');
+    return null;
   }
 
   return await prisma.userProfile.findUnique({
     where: { userId: session.user.id },
   });
 }
+

@@ -90,7 +90,7 @@ export default function AnalysisResults({ data }: AnalysisResultsProps) {
                   <div className="bg-muted/50 p-4 rounded-xl">
                     <h4 className="text-sm font-semibold uppercase text-muted-foreground mb-3">Why it works</h4>
                     <p className="text-sm leading-relaxed italic">
-                      "{look.overallReasoning}"
+                      &quot;{look.overallReasoning}&quot;
                     </p>
                   </div>
                 </div>

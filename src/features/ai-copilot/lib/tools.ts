@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma';
-import { supabase } from '@/lib/supabase';
+import { createClient } from '@/lib/supabase/server';
 import { z } from 'zod';
 
 export const tools = {
@@ -10,6 +10,7 @@ export const tools = {
       userId: z.string().describe('The ID of the user performing the search'),
     }),
     execute: async ({ query, userId }: { query: string, userId: string }) => {
+      const supabase = await createClient();
       // 1. Keyword Search using Prisma
       const keywordResults = await prisma.product.findMany({
         where: {
@@ -98,6 +99,7 @@ export const tools = {
       productId: z.string().describe('The ID of the product to find dupes for'),
     }),
     execute: async ({ productId }: { productId: string }) => {
+      const supabase = await createClient();
       const product = await prisma.product.findUnique({ where: { id: productId } });
       if (!product) throw new Error('Product not found');
 
