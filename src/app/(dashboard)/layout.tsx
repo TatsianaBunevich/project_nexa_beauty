@@ -84,7 +84,7 @@ export default function DashboardLayout({
           </div>
 
           <div className="flex items-center gap-4">
-            <div className="h-8 w-8 rounded-full bg-primary" />
+            <Link href="/login" className="h-8 w-8 rounded-full bg-primary transition-opacity hover:opacity-80" />
           </div>
         </header>
         <div className="p-6">{children}</div>
