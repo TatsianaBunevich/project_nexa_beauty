@@ -256,7 +256,7 @@ export function CollectionClient({ initialProducts }: CollectionClientProps) {
                   </span>
                 </div>
                 <div className="flex items-center justify-between pt-2">
-                  <span className="rounded-full bg-secondary px-2 py-0.5 text-xs text-secondary-foreground">
+                  <span className="text-xs text-muted-foreground">
                     {item.product?.shade}
                   </span>
                   <span className="text-xs text-muted-foreground">

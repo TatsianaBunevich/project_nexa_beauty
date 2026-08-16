@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Sparkles, Send, User, Bot } from 'lucide-react'
 import { CopilotResponse } from '@/types/copilot'
+import { getBeautyProfile } from '@/features/ai-copilot/actions/profile'
 
 export function CopilotChat({ userId }: { userId: string }) {
   const [messages, setMessages] = useState<
@@ -13,12 +14,11 @@ export function CopilotChat({ userId }: { userId: string }) {
   >([])
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [profile, setProfile] = useState<any>(null)
   const scrollRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight
-    }
+    scrollRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
   async function handleSubmit(e: React.FormEvent) {
@@ -72,8 +72,7 @@ export function CopilotChat({ userId }: { userId: string }) {
         <Sparkles className="h-5 w-5 text-primary" />
         <h2 className="font-semibold">Nexa Beauty Copilot</h2>
       </div>
-
-      <ScrollArea className="flex-1 p-4" ref={scrollRef}>
+      <ScrollArea className="flex-1 p-4">
         <div className="space-y-4">
           {messages.length === 0 && (
             <div className="py-10 text-center text-muted-foreground">
@@ -164,6 +163,7 @@ export function CopilotChat({ userId }: { userId: string }) {
               </div>
             </div>
           ))}
+          <div ref={scrollRef} />
         </div>
       </ScrollArea>
 
