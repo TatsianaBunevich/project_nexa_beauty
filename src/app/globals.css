@@ -55,15 +55,36 @@
     @apply bg-background text-foreground antialiased;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif;
+  }
 }
 
 @layer utilities {
+  .font-serif {
+    font-family: var(--font-playfair), serif;
+  }
+  .font-sans {
+    font-family: var(--font-inter), sans-serif;
+  }
+  .bg-ivory {
+    background-color: #FDFBF7;
+  }
+  .bg-champagne {
+    background-color: #F7E7CE;
+  }
+  .text-espresso {
+    color: #1A1A1A;
+  }
   .animate-scan-line {
     animation: scan-line 2s linear infinite;
+  }
+  .luxury-gradient {
+    background: linear-gradient(to bottom right, #FDFBF7, #F7E7CE, #FFFFFF);
   }
 }
 
 @keyframes scan-line {
   0% { transform: translateY(0); }
-  100% { transform: translateY(300px); } /* This is a rough estimate, needs fine tuning */
+  100% { transform: translateY(300px); }
 }
