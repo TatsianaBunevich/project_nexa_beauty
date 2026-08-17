@@ -1,7 +1,6 @@
 'use client'
 
 import React from 'react'
-import { motion } from 'framer-motion'
 import { CheckCircle2 } from 'lucide-react'
 
 export function ProductDiscovery() {
@@ -10,17 +9,13 @@ export function ProductDiscovery() {
       <div className="mx-auto max-w-7xl px-6">
         <div className="grid grid-cols-1 items-center gap-16 lg:grid-cols-2">
           <div className="relative">
-            <div className="relative mx-auto aspect-square w-full max-w-md overflow-hidden rounded-full bg-stone-100">
-              <div className="absolute inset-0 bg-gradient-to-tr from-stone-200 to-stone-100" />
-              <div className="absolute left-1/2 top-1/2 h-2/3 w-2/3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/30 blur-3xl" />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="h-48 w-48 rotate-12 rounded-2xl border border-stone-100 bg-white p-4 shadow-xl">
-                  <div className="mb-2 h-4 w-1/2 rounded bg-stone-100" />
-                  <div className="mb-2 h-24 w-full rounded-lg bg-stone-200" />
-                  <div className="h-3 w-3/4 rounded bg-stone-100" />
-                </div>
-              </div>
-            </div>
+            <picture className="overflow-hidden rounded-3xl border border-stone-100 bg-stone-50 shadow-2xl">
+              <img
+                src="/images/img_app_options.jpg"
+                alt="Nexa Beauty app options interface"
+                className="h-auto w-full object-cover"
+              />
+            </picture>
           </div>
 
           <div>

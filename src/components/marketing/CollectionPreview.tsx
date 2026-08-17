@@ -10,36 +10,42 @@ const products = [
     shade: 'Joy',
     category: 'Blush',
     insight: 'Works beautifully with your warm-neutral palette.',
+    img: '/images/img_rare_beauty_blush_joy.jpg',
   },
   {
     name: "Fenty Beauty Pro Filt'r",
     shade: '145',
     category: 'Foundation',
     insight: 'Perfect match for your olive undertone.',
+    img: '/images/img_fenty_beauty_foundation_145.jpg',
   },
   {
     name: 'Dior Addict Lip Glow',
     shade: '001 Pink',
     category: 'Lip Balm',
     insight: 'Enhances your natural lip color.',
+    img: '/images/img_dior_lip_balm_001.jpg',
   },
   {
     name: 'Huda Beauty Palette',
     shade: 'Nude',
     category: 'Eyeshadow',
     insight: 'Ideal for your brown eye color.',
+    img: '/images/img_huda_beauty_eyeshadow_nude.jpg',
   },
   {
     name: 'Charlotte Tilbury Flawless',
     shade: 'Fair',
     category: 'Concealer',
     insight: 'Great coverage for your skin type.',
+    img: '/images/img_charlotte_tilbury_concealer_fair.jpg',
   },
   {
     name: 'Too Faced Better Than Sex',
     shade: 'Black',
     category: 'Mascara',
     insight: 'Adds volume without clumping.',
+    img: '/images/img_too_faced_mascara_black.jpg',
   },
 ]
 
@@ -69,9 +75,12 @@ export function CollectionPreview() {
               className="group relative rounded-3xl border border-stone-100 bg-stone-50 p-6 transition-all duration-300 hover:bg-white hover:shadow-xl"
             >
               <div className="relative mb-6 aspect-square w-full overflow-hidden rounded-2xl bg-stone-200">
-                {/* Abstract product shape */}
-                <div className="absolute inset-0 bg-gradient-to-br from-stone-200 to-stone-300" />
-                <div className="absolute left-1/2 top-1/2 h-1/2 w-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/50 blur-xl" />
+                <div
+                  className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+                  style={{ backgroundImage: `url(${product.img})` }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-br from-stone-200/30" />
+                <div className="absolute left-1/2 top-1/2 h-1/2 w-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-black/10 blur-xl" />
               </div>
 
               <div className="space-y-1">

@@ -8,26 +8,31 @@ const insights = [
     label: 'Your Palette',
     value: 'Warm',
     color: 'bg-amber-100 text-amber-700',
+    bg: 'bg-amber-950/30',
   },
   {
     label: 'Most Used',
     value: 'Lip Products',
     color: 'bg-rose-100 text-rose-700',
+    bg: 'bg-rose-950/30',
   },
   {
     label: 'Your Finish',
     value: 'Natural Glow',
     color: 'bg-stone-100 text-stone-600',
+    bg: 'bg-stone-950/30',
   },
   {
     label: 'Collection Overlap',
     value: '12%',
     color: 'bg-blue-100 text-blue-700',
+    bg: 'bg-blue-950/30',
   },
   {
     label: 'Potential Additions',
     value: '3',
     color: 'bg-green-100 text-green-700',
+    bg: 'bg-green-950/30',
   },
 ]
 
@@ -56,7 +61,7 @@ export function AIInsights() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.1 }}
-              className="group rounded-3xl border border-stone-800 bg-stone-900/50 p-8 text-center transition-colors duration-300 hover:bg-stone-800"
+              className={`group rounded-3xl border border-stone-800 ${insight.bg} p-8 text-center transition-colors duration-300 hover:bg-stone-800`}
             >
               <div className="mb-4 text-xs font-bold uppercase tracking-widest text-stone-500">
                 {insight.label}

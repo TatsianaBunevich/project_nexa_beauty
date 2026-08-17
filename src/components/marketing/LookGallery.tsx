@@ -7,22 +7,22 @@ const looks = [
   {
     title: 'Soft Sculpt',
     desc: 'Minimal, luminous, warm.',
-    image: 'bg-stone-100',
+    image: '/images/img_soft_sculpt.jpg',
   },
   {
     title: 'Golden Hour',
     desc: 'Bronzed skin, warm eyes, glossy lips.',
-    image: 'bg-stone-200',
+    image: '/images/img_golden_hour.jpg',
   },
   {
     title: 'Modern Romance',
     desc: 'Soft blush, defined eyes, muted rose lips.',
-    image: 'bg-stone-300',
+    image: '/images/img_modern_romance.jpg',
   },
   {
     title: 'After Dark',
     desc: 'Smoky eyes, sculpted skin, statement lip.',
-    image: 'bg-stone-400',
+    image: '/images/img_after_dark.jpg',
   },
 ]
 
@@ -48,10 +48,11 @@ export function LookGallery() {
               className="group relative aspect-[3/4] cursor-pointer overflow-hidden rounded-3xl"
             >
               <div
-                className={`absolute inset-0 ${look.image} transition-transform duration-700 group-hover:scale-110`}
+                className={`absolute inset-0 bg-cover transition-transform duration-700 group-hover:scale-110`}
+                style={{ backgroundImage: `url(${look.image})` }}
               />
 
-              <div className="from-espresso/80 absolute inset-0 bg-gradient-to-t via-transparent to-transparent" />
+              <div className="from-espresso/80 absolute inset-0 bg-gradient-to-t from-slate-600/60 to-slate-100/10" />
 
               <div className="absolute left-0 top-2/3 p-6 text-white">
                 <h3 className="mb-2 font-serif text-2xl font-bold">
