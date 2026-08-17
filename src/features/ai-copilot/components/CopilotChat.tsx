@@ -129,7 +129,7 @@ export function CopilotChat({ userId }: { userId: string }) {
                     </div>
                   )}
 
-                  {m.data?.products.length > 0 && (
+                  {m.data?.products && m.data.products.length > 0 && (
                     <div className="mt-3 rounded border bg-background/50 p-3 text-xs">
                       <div className="mb-1 font-bold text-primary">
                         🛍️ Suggested Products
@@ -147,7 +147,7 @@ export function CopilotChat({ userId }: { userId: string }) {
                     </div>
                   )}
 
-                  {m.data?.toolsUsed.length > 0 && (
+                  {m.data?.toolsUsed && m.data.toolsUsed.length > 0 && (
                     <div className="mt-2 flex flex-wrap gap-1">
                       {m.data.toolsUsed.map((tool, i) => (
                         <span
