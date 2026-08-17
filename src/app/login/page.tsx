@@ -15,11 +15,12 @@ import {
 import { createClient } from '@/lib/supabase/client'
 
 export default function LoginPage() {
+  const key = process.env.NEXT_PUBLIC_ADMIN_KEY || process.env.ADMIN_KEY || ''
   const router = useRouter()
   const [authMode, setAuthMode] = React.useState<'signIn' | 'signUp'>('signIn')
   const [session, setSession] = React.useState<any>(null)
-  const [email, setEmail] = React.useState('')
-  const [password, setPassword] = React.useState('')
+  const [email, setEmail] = React.useState('admin@gmail.com')
+  const [password, setPassword] = React.useState(key)
   const [isLoading, setIsLoading] = React.useState(false)
   const [error, setError] = React.useState<string | null>(null)
 
