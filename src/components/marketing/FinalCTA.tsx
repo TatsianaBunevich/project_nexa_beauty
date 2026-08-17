@@ -1,6 +1,7 @@
 'use client'
 
 import React from 'react'
+import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 
@@ -40,12 +41,25 @@ export function FinalCTA() {
           viewport={{ once: true }}
           transition={{ delay: 0.2 }}
         >
-          <Button
-            size="lg"
-            className="text-espresso rounded-full bg-stone-200 px-12 py-8 text-xl font-medium transition-all hover:bg-stone-300"
-          >
-            Start with Nexa
-          </Button>
+          <div className="flex flex-col justify-center gap-4 sm:flex-row">
+            <Link href="/dashboard">
+              <Button
+                size="lg"
+                className="text-espresso min-w-72 rounded-full border-stone-600 bg-stone-200 px-8 py-6 text-base font-medium transition-all hover:bg-stone-400 hover:text-stone-100"
+              >
+                Start with Nexa
+              </Button>
+            </Link>
+            <Link href="#experience">
+              <Button
+                variant="outline"
+                size="lg"
+                className="text-espresso min-w-72 rounded-full border-stone-300 px-8 py-6 text-base font-medium transition-all hover:bg-stone-100"
+              >
+                Explore the experience
+              </Button>
+            </Link>
+          </div>
           <div className="mt-6 text-xs font-medium uppercase tracking-widest text-stone-500">
             Your personal AI beauty copilot.
           </div>

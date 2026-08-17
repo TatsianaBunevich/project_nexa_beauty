@@ -1,6 +1,7 @@
 'use client'
 
 import React from 'react'
+import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { HeroUIPreview } from './HeroUIPreview'
@@ -52,21 +53,15 @@ export function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="flex flex-col gap-4 sm:flex-row"
           >
-            <Button
-              size="lg"
-              className="rounded-full bg-stone-800 px-8 py-6 text-base font-medium text-white transition-all hover:bg-stone-500"
-            >
-              Try Nexa Beauty
-            </Button>
-            <Button
-              variant="outline"
-              size="lg"
-              className="text-espresso rounded-full border-stone-300 px-8 py-6 text-base font-medium transition-all hover:bg-stone-100"
-            >
-              Explore the experience
-            </Button>
+            <Link href="/dashboard">
+              <Button
+                size="lg"
+                className="rounded-full bg-stone-800 px-8 py-6 text-base font-medium text-white transition-all hover:bg-stone-500"
+              >
+                Try Nexa Beauty
+              </Button>
+            </Link>
           </motion.div>
         </div>
 
