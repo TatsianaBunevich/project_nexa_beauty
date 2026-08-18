@@ -61,31 +61,48 @@ export const productRepository: ProductRepository = {
   },
 
   async getById(id: string) {
-    return await prisma.product.findUnique({
-      where: { id },
-    });
+    if (!id || typeof id !== 'string') {
+      return null;
+    }
+    try {
+      return await prisma.product.findUnique({
+        where: { id },
+      });
+    } catch (e) {
+      console.error('[ProductRepo] getById error:', e);
+      return null;
+    }
   },
 
   async findSimilar(productId: string) {
-    const product = await prisma.product.findUnique({
-      where: { id: productId },
-    });
-
-    if (!product || !product.embedding) {
+    if (!productId || typeof productId !== 'string') {
       return [];
     }
 
-    const { data, error } = await supabase.rpc('match_products', {
-      query_embedding: product.embedding,
-      match_threshold: 0.7,
-      match_count: 10,
-    });
+    try {
+      const product = await prisma.product.findUnique({
+        where: { id: productId },
+      });
 
-    if (error) {
-      console.error('[ProductRepo] Similarity search error:', error);
+      if (!product || !product.embedding) {
+        return [];
+      }
+
+      const { data, error } = await supabase.rpc('match_products', {
+        query_embedding: product.embedding,
+        match_threshold: 0.7,
+        match_count: 10,
+      });
+
+      if (error) {
+        console.error('[ProductRepo] Similarity search error:', error);
+        return [];
+      }
+
+      return data || [];
+    } catch (e) {
+      console.error('[ProductRepo] findSimilar error:', e);
       return [];
     }
-
-    return data || [];
   },
 };

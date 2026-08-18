@@ -131,25 +131,33 @@ export const tools = {
       productId: z.string().describe('The ID of the product to find dupes for'),
     }),
     execute: async ({ productId }: { productId: string }) => {
-      const supabase = await createClient()
-      const product = await prisma.product.findUnique({
-        where: { id: productId },
-      })
-      if (!product) throw new Error('Product not found')
-
-      // Use vector search to find similar products in the same category
-      const { data: dupes, error } = await supabase.rpc('match_products', {
-        query_embedding: product.embedding, // Use existing embedding
-        match_threshold: 0.7,
-        match_count: 5,
-      })
-
-      if (error) {
-        console.error('Dupe search error:', error)
+      if (!productId || typeof productId !== 'string') {
         return []
       }
+      try {
+        const supabase = await createClient()
+        const product = await prisma.product.findUnique({
+          where: { id: productId },
+        })
+        if (!product || !product.embedding) return []
 
-      return dupes
+        // Use vector search to find similar products in the same category
+        const { data: dupes, error } = await supabase.rpc('match_products', {
+          query_embedding: product.embedding, // Use existing embedding
+          match_threshold: 0.7,
+          match_count: 5,
+        })
+
+        if (error) {
+          console.error('Dupe search error:', error)
+          return []
+        }
+
+        return dupes || []
+      } catch (err) {
+        console.error('Dupe search crash:', err)
+        return []
+      }
     },
   },
 

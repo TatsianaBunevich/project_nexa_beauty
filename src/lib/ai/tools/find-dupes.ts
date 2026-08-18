@@ -7,6 +7,9 @@ export const findDupesSchema = z.object({
 
 export async function findDupes(args: z.infer<typeof findDupesSchema>) {
   console.log('[Tool] find_dupes:', args);
+  if (!args?.productId) {
+    return [];
+  }
   return await productRepository.findSimilar(args.productId);
 }
 

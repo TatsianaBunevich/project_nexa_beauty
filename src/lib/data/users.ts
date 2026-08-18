@@ -7,18 +7,26 @@ export interface UserRepository {
 
 export const userRepository: UserRepository = {
   async getProfile(userId: string) {
-    const profile = await prisma.userProfile.findUnique({
-      where: { userId },
-    });
+    if (!userId || typeof userId !== 'string') {
+      return null;
+    }
+    try {
+      const profile = await prisma.userProfile.findUnique({
+        where: { userId },
+      });
 
-    if (!profile) return null;
+      if (!profile) return null;
 
-    return {
-      userId,
-      skinTone: profile.skinTone,
-      eyeColor: profile.eyeColor,
-      skinType: profile.skinType,
-      preferredStyle: profile.preferredStyle,
-    };
+      return {
+        userId,
+        skinTone: profile.skinTone,
+        eyeColor: profile.eyeColor,
+        skinType: profile.skinType,
+        preferredStyle: profile.preferredStyle,
+      };
+    } catch (e) {
+      console.error('[UserRepo] getProfile error:', e);
+      return null;
+    }
   },
 };
