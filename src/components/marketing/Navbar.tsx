@@ -1,12 +1,16 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useTransition } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { motion } from 'framer-motion'
+import { Loader2 } from 'lucide-react'
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
+  const router = useRouter()
+  const [isPending, startTransition] = useTransition()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -61,14 +65,21 @@ export function Navbar() {
           </Link>
         </div>
 
-        <Link href="/dashboard">
-          <Button
-            variant="outline"
-            className="border-espresso text-espresso hover:bg-espresso rounded-full px-6 py-2 transition-all duration-300 hover:text-white"
-          >
-            Try Nexa
-          </Button>
-        </Link>
+        <Button
+          variant="outline"
+          className="border-espresso text-espresso hover:bg-espresso rounded-full px-6 py-2 transition-all duration-300 hover:text-white"
+          onClick={() => startTransition(() => router.push('/dashboard'))}
+          disabled={isPending}
+        >
+          {isPending ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Loading
+            </>
+          ) : (
+            'Try Nexa'
+          )}
+        </Button>
       </div>
     </motion.nav>
   )

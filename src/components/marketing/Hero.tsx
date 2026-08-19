@@ -1,12 +1,16 @@
 'use client'
 
-import React from 'react'
-import Link from 'next/link'
+import React, { useTransition } from 'react'
+import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { HeroUIPreview } from './HeroUIPreview'
+import { Loader2 } from 'lucide-react'
 
 export function Hero() {
+  const router = useRouter()
+  const [isPending, startTransition] = useTransition()
+
   return (
     <section className="bg-ivory relative overflow-hidden pb-20 pt-32 lg:pb-32 lg:pt-48">
       {/* Background subtle glow */}
@@ -54,14 +58,21 @@ export function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
           >
-            <Link href="/dashboard">
-              <Button
-                size="lg"
-                className="rounded-full bg-stone-800 px-8 py-6 text-base font-medium text-white transition-all hover:bg-stone-500"
-              >
-                Try Nexa Beauty
-              </Button>
-            </Link>
+            <Button
+              size="lg"
+              className="rounded-full bg-stone-800 px-8 py-6 text-base font-medium text-white transition-all hover:bg-stone-500"
+              onClick={() => startTransition(() => router.push('/dashboard'))}
+              disabled={isPending}
+            >
+              {isPending ? (
+                <>
+                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                  Loading
+                </>
+              ) : (
+                'Try Nexa Beauty'
+              )}
+            </Button>
           </motion.div>
         </div>
 
